@@ -1,14 +1,14 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { User, UserDocument } from './users.schema';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
-export class UsersService {
-    constructor(@Injectable(UsersService.name), private userModel: Model<User>) {}
-
-    
-    async createInflateRaw(dados: any): Promise<User> {
-        const novoUsuario = new this.userModel(dados);
-        return novoUsuario.save();
-    }
-    
+export class UserService {
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const createdUser = new this.userModel(createUserDto);
+    return createdUser.save();
+  }
 }
