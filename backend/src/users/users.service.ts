@@ -11,4 +11,22 @@ export class UserService {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
+
+  async update(id: string, dadosAtualizados: Partial<CreateUserDto>) {
+    return this.userModel
+      .findByIdAndUpdate(id, dadosAtualizados, { new: true })
+      .exec();
+  }
+
+  async remove(id: string) {
+    return this.userModel.findByIdAndDelete(id).exec();
+  }
+
+  async validarUsuario(email: string, senhaDigitada: string) {
+    const usuario = await this.userModel.findOne({ email }).exec();
+    if (usuario && usuario.senha === senhaDigitada) {
+      return usuario;
+    }
+    return null;
+  }
 }

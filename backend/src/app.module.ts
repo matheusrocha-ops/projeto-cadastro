@@ -6,9 +6,7 @@ import { AppService } from './app.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://matheusrocha_db_user:Matheus_.17@cluster0.0b1a6wp.mongodb.net/?appName=Cluster0',
-    ),
+    MongooseModule.forRoot('mongodb://localhost:27017/projeto_usuarios'),
     UsersModule,
   ],
   controllers: [AppController],

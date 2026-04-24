@@ -13,6 +13,14 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'O nome completo é obrigatório.' })
   nomeCompleto: string;
 
+  @IsISO8601({}, { message: 'Data de nascimento inválida.' })
+  @IsNotEmpty({ message: 'A data de nascimento é obrigatória.' })
+  dataNascimento: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'O CPF é obrigatório.' })
+  cpf: string;
+
   @IsEmail({}, { message: 'O email informado é inválido.' })
   @IsNotEmpty({ message: 'O email é obrigatório.' })
   email: string;
