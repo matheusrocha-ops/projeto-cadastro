@@ -9,11 +9,12 @@ export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
+
     return createdUser.save();
   }
 
   async update(id: string, dadosAtualizados: Partial<CreateUserDto>) {
-    return this.userModel
+    return await this.userModel
       .findByIdAndUpdate(id, dadosAtualizados, { new: true })
       .exec();
   }
@@ -28,5 +29,9 @@ export class UserService {
       return usuario;
     }
     return null;
+  }
+
+  async listUsers() {
+    return await 0;
   }
 }
