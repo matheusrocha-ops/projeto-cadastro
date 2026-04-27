@@ -1,0 +1,20 @@
+<form>
+  <h2>Cadastro</h2>
+
+  <label>Nome Completo</label>
+  <input type="text" [(ngModel)]="nomeCompleto" name="nomeCompleto" />
+
+  <label>Email:</label>
+  <input type="email" [(ngModel)]="email" name="email" />
+
+  <label>Senha</label>
+  <input type="password" [(ngModel)]="senha" name="senha" />
+
+  <label>Data de Nascimento</label>
+  <input type="date" [(ngModel)]="dataNascimento" name="dataNascimento" />
+
+  <label>CPF</label>
+  <input type="text" [(ngModel)]="cpf" name="cpf" />
+
+  <button type="button" (click)="enviar()">Cadastrar</button>
+</form>
