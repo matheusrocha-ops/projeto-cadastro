@@ -1,11 +1,27 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+export interface Usuario {
+  nomeCompleto: string;
+  email: string;
+  senha?: string;
+  cpf: string;
+  dataNascimento: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api';
+  private usuarios: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
+
+  cadastrarUsuario(novoUsuario: any) {
+    this.usuarios.push(novoUsuario);
+    console.log('Cofre: Novo usuário recebido!', this.usuarios);
+  }
+
+  obterUsuarios(): any[] {
+    return this.usuarios;
+  }
 }

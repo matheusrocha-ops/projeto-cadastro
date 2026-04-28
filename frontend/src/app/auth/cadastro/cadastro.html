@@ -1,20 +1,48 @@
-<form>
+<form [formGroup]="cadastroForm" (ngSubmit)="enviar()">
   <h2>Cadastro</h2>
 
   <label>Nome Completo</label>
-  <input type="text" [(ngModel)]="nomeCompleto" name="nomeCompleto" />
+  <input type="text" formControlName="nomeCompleto" />
+
+  @if (cadastroForm.get('nomeCompleto')?.invalid && cadastroForm.get('nomeCompleto')?.touched) {
+    <small style="color: red">O Nome Completo é obrigatório!</small>
+  }
 
   <label>Email:</label>
-  <input type="email" [(ngModel)]="email" name="email" />
+  <input type="email" formControlName="email" />
+  @if (cadastroForm.get('email')?.invalid && cadastroForm.get('email')?.touched) {
+    <small style="color: red">O Email é obrigatório!</small>
+  }
 
   <label>Senha</label>
-  <input type="password" [(ngModel)]="senha" name="senha" />
+  <input type="password" formControlName="senha" />
+
+  @if (cadastroForm.get('senha')?.invalid && cadastroForm.get('senha')?.touched) {
+    <small style="color: red">A Senha é obrigatória!</small>
+  }
 
   <label>Data de Nascimento</label>
-  <input type="date" [(ngModel)]="dataNascimento" name="dataNascimento" />
+  <input type="date" formControlName="dataNascimento" />
+
+  @if (cadastroForm.get('dataNascimento')?.invalid && cadastroForm.get('dataNascimento')?.touched) {
+    <small style="color: red">A Data de Nascimento é obrigatória!</small>
+  }
 
   <label>CPF</label>
-  <input type="text" [(ngModel)]="cpf" name="cpf" />
+  <input type="text" formControlName="cpf" />
 
-  <button type="button" (click)="enviar()">Cadastrar</button>
+  @if (cadastroForm.get('cpf')?.invalid && cadastroForm.get('cpf')?.touched) {
+    <small style="color: red">O CPF é obrigatório!</small>
+  }
+
+  <button type="submit">Cadastrar</button>
+
+  <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc" />
+
+  <p style="text-align: center; font-size: 14px">
+    Já tem uma conta?
+    <a routerLink="/login" style="color: blue; text-decoration: underline; cursor: pointer"
+      >Faça login aqui</a
+    >
+  </p>
 </form>

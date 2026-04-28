@@ -1,34 +1,41 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-cadastro',
   templateUrl: './cadastro.html',
   styleUrls: ['./cadastro.css'],
   standalone: true,
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule, RouterModule],
 })
-export class CadastroComponent {
-  nomeCompleto = '';
-  email = '';
-  senha = '';
-  dataNascimento = '';
-  cpf = '';
+export class CadastroComponent implements OnInit {
+  cadastroForm!: FormGroup;
 
-cadastroForm!: FormGroup;
-ngOnInit() {
-  this.cadastroForm = this.fb.group({
-    nomeCompleto: ['', [Validators.required]]
-    email: ['', [Validators.required, Validators.email]],
-    senha: ['', [Validators.required, Validators.senha]],
-    cpf: ['', [Validators.required, Validators.cpf]]
-    dataNascimento: ['', [Validators.required, Validators.dataNascimento]]
-  });
-}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+  ) {}
 
-  constructor(private fb: FormBuilder) {}
+  ngOnInit() {
+    this.cadastroForm = this.fb.group({
+      nomeCompleto: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required]],
+      cpf: ['', [Validators.required]],
+      dataNascimento: ['', [Validators.required]],
+    });
+  }
 
   enviar() {
-    console.log('Cadastrando:', this.nomeCompleto, this.senha, this.dataNascimento, this.cpf);
+    if (this.cadastroForm.valid) {
+      const novoUsuario = this.cadastroForm.value;
+      this.authService.cadastrarUsuario(novoUsuario);
+      this.cadastroForm.reset();
+      alert('Cadastro realizado com sucesso!');
+    } else {
+      this.cadastroForm.markAllAsTouched();
+    }
   }
 }

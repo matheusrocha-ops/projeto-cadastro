@@ -1,1 +1,43 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="entrar()">
+  <h2>Acesso ao Sistema</h2>
+
+  @if (erroLogin) {
+    <div
+      style="
+        background-color: #ffe6e6;
+        color: #cc0000;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        border: 1px solid #ffcccc;
+      "
+    >
+      <strong>Acesso Negado:</strong> E-mail ou senha incorretos.
+    </div>
+  }
+
+  <label>Email:</label>
+  <input type="email" formControlName="email" placeholder="Digite seu e-mail cadastrado" />
+
+  @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+    <small style="color: red">Informe um e-mail válido!</small>
+  }
+
+  <label>Senha:</label>
+  <input type="password" formControlName="senha" placeholder="Digite sua senha" />
+
+  @if (loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched) {
+    <small style="color: red">A senha é obrigatória!</small>
+  }
+
+  <button type="submit" style="margin-top: 10px">Entrar</button>
+
+  <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc" />
+
+  <p style="text-align: center; font-size: 14px">
+    Ainda não tem conta?
+    <a routerLink="/cadastro" style="color: blue; text-decoration: underline; cursor: pointer"
+      >Cadastre-se aqui</a
+    >
+  </p>
+</form>
