@@ -12,7 +12,6 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-
   erroLogin = false;
 
   constructor(
@@ -28,20 +27,22 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  entrar() {
+  async entrar() {
     if (this.loginForm.valid) {
-      const emailDigitado = this.loginForm.value.email;
-      const senhaDigitada = this.loginForm.value.senha;
+      const { email, senha } = this.loginForm.value;
 
-      const listaUsuarios = this.authService.obterUsuarios();
+      try {
+        // AGORA SIM: Chamamos o servidor para validar a senha com Bcrypt
+        const usuarioLogado = await this.authService.login(email, senha);
 
-      const usuarioValido = listaUsuarios.find(
-        (user: any) => user.email === emailDigitado && user.senha === senhaDigitada,
-      );
-
-      if (usuarioValido) {
-        alert('Acesso Liberado! Bem-vindo(a) ' + usuarioValido.nomeCompleto);
-      } else {
+        if (usuarioLogado) {
+          console.log('Login realizado com sucesso!');
+          this.router.navigate(['/listagem']);
+        } else {
+          this.erroLogin = true;
+        }
+      } catch (erro) {
+        console.error('Erro ao fazer login:', erro);
         this.erroLogin = true;
       }
     } else {

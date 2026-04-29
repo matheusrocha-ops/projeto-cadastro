@@ -3,46 +3,59 @@
 
   <label>Nome Completo</label>
   <input type="text" formControlName="nomeCompleto" />
-
-  @if (cadastroForm.get('nomeCompleto')?.invalid && cadastroForm.get('nomeCompleto')?.touched) {
+  @if (
+    cadastroForm.get('nomeCompleto')?.hasError('required') &&
+    cadastroForm.get('nomeCompleto')?.touched
+  ) {
     <small style="color: red">O Nome Completo é obrigatório!</small>
   }
 
   <label>Email:</label>
   <input type="email" formControlName="email" />
-  @if (cadastroForm.get('email')?.invalid && cadastroForm.get('email')?.touched) {
+  @if (cadastroForm.get('email')?.hasError('required') && cadastroForm.get('email')?.touched) {
     <small style="color: red">O Email é obrigatório!</small>
+  }
+  @if (cadastroForm.get('email')?.hasError('email') && cadastroForm.get('email')?.touched) {
+    <small style="color: red">Formato de e-mail inválido!</small>
   }
 
   <label>Senha</label>
   <input type="password" formControlName="senha" />
-
-  @if (cadastroForm.get('senha')?.invalid && cadastroForm.get('senha')?.touched) {
+  @if (cadastroForm.get('senha')?.hasError('required') && cadastroForm.get('senha')?.touched) {
     <small style="color: red">A Senha é obrigatória!</small>
+  }
+  @if (cadastroForm.get('senha')?.hasError('pattern') && cadastroForm.get('senha')?.touched) {
+    <small style="color: red"
+      >A senha deve ter 8-16 caracteres, pelo menos 1 maiúscula, 1 minúscula e 1 número.</small
+    >
   }
 
   <label>Data de Nascimento</label>
   <input type="date" formControlName="dataNascimento" />
-
-  @if (cadastroForm.get('dataNascimento')?.invalid && cadastroForm.get('dataNascimento')?.touched) {
+  @if (
+    cadastroForm.get('dataNascimento')?.hasError('required') &&
+    cadastroForm.get('dataNascimento')?.touched
+  ) {
     <small style="color: red">A Data de Nascimento é obrigatória!</small>
   }
 
   <label>CPF</label>
-  <input type="text" formControlName="cpf" />
-
-  @if (cadastroForm.get('cpf')?.invalid && cadastroForm.get('cpf')?.touched) {
+  <input type="text" formControlName="cpf" maxlength="11" placeholder="Apenas números" />
+  @if (cadastroForm.get('cpf')?.hasError('required') && cadastroForm.get('cpf')?.touched) {
     <small style="color: red">O CPF é obrigatório!</small>
   }
+  @if (cadastroForm.get('cpf')?.hasError('pattern') && cadastroForm.get('cpf')?.touched) {
+    <small style="color: red">O CPF deve conter exatamente 11 dígitos numéricos.</small>
+  }
 
-  <button type="submit">Cadastrar</button>
+  <button type="submit" [disabled]="cadastroForm.invalid">Cadastrar</button>
 
   <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc" />
 
   <p style="text-align: center; font-size: 14px">
     Já tem uma conta?
-    <a routerLink="/login" style="color: blue; text-decoration: underline; cursor: pointer"
-      >Faça login aqui</a
-    >
+    <a routerLink="/login" style="color: blue; text-decoration: underline; cursor: pointer">
+      Faça login aqui
+    </a>
   </p>
 </form>

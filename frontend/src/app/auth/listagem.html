@@ -1,0 +1,72 @@
+<div class="listagem-container">
+  <h2>Painel de Usuários</h2>
+  <p>Gerencie os usuários cadastrados no sistema.</p>
+
+  <table class="usuarios-table">
+    <thead>
+      <tr>
+        <th>Nome Completo</th>
+        <th>E-mail</th>
+        <th>CPF</th>
+        <th class="acoes-header">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of usuariosNaTela; track user._id) {
+        <tr>
+          <td>{{ user.nomeCompleto }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.cpf }}</td>
+          <td class="acoes-botoes">
+            <button (click)="abrirModal(user)" class="btn-editar">Editar</button>
+            <button (click)="excluir(user._id)" class="btn-excluir">Excluir</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" style="text-align: center; padding: 20px">
+            Nenhum usuário encontrado no banco de dados.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="rodape-acoes">
+    <button routerLink="/" class="btn-voltar">Voltar para Home</button>
+  </div>
+</div>
+
+@if (exibirModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Editar Usuário</h3>
+      <form [formGroup]="formEdicao" (ngSubmit)="salvarEdicao()">
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" formControlName="nomeCompleto" />
+        </div>
+
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" formControlName="email" />
+        </div>
+
+        <div class="form-group">
+          <label>CPF</label>
+          <input type="text" formControlName="cpf" />
+        </div>
+
+        <div class="form-group">
+          <label>Data de Nascimento</label>
+          <input type="date" formControlName="dataNascimento" />
+        </div>
+
+        <div class="modal-acoes">
+          <button type="submit" class="btn-salvar">Salvar Alterações</button>
+          <button type="button" (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

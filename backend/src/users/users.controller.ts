@@ -6,6 +6,9 @@ import {
   Param,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,34 +18,36 @@ import { LoginDto } from './dto/login.dto';
 export class UsersController {
   constructor(private readonly usersService: UserService) {}
 
+  // Criar Usuário
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    try {
-      return this.usersService.create(createUserDto);
-    } catch (error: any) {
-      console.log(error?.message);
-    }
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
+  // Listar todos os usuários (O que faz a sua tabela funcionar)
+  @Get()
+  listUsers() {
+    return this.usersService.listUsers();
+  }
+
+  // Atualizar Usuário
   @Patch(':id')
-  async update(
+  update(
     @Param('id') id: string,
     @Body() dadosAtualizados: Partial<CreateUserDto>,
   ) {
-    return await this.usersService.update(id, dadosAtualizados);
+    return this.usersService.update(id, dadosAtualizados);
   }
 
-  @Get()
-  async listUsers() {
-    return await this.usersService.listUsers();
-  }
-
+  // Deletar Usuário
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
 
+  // Login Seguro
   @Post('login')
+  @HttpCode(HttpStatus.OK) // Garante que o status de sucesso seja 200
   async login(@Body() loginDto: LoginDto) {
     const usuario = await this.usersService.validarUsuario(
       loginDto.email,
@@ -50,15 +55,15 @@ export class UsersController {
     );
 
     if (!usuario) {
-      return { mensagem: 'E-mail ou senha incorretos! ❌' };
+      // Se não validar, lança um erro 401 que o Angular vai detectar no catch
+      throw new UnauthorizedException('E-mail ou senha incorretos! ❌');
     }
 
+    // Se der certo, retorna apenas os dados necessários
     return {
-      mensagem: 'Login realizado com sucesso! ✅',
-      usuario: {
-        nome: usuario.nomeCompleto,
-        email: usuario.email,
-      },
+      id: usuario._id,
+      nome: usuario.nomeCompleto,
+      email: usuario.email,
     };
   }
 }
