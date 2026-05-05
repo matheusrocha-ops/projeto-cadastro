@@ -9,10 +9,14 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './users.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<Omit<User, 'senha'>> {
     try {
@@ -84,5 +88,14 @@ export class UserService {
     const deletado = await this.userModel.findByIdAndDelete(id).exec();
     if (!deletado) throw new NotFoundException('Usuário não encontrado.');
     return { mensagem: 'Removido com sucesso!' };
+  }
+
+  gerarToken(usuario: UserDocument) {
+    const payload = { email: usuario.email, sub: usuario._id };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+      nome: usuario.nomeCompleto,
+    };
   }
 }
