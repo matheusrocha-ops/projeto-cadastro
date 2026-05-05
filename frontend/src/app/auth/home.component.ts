@@ -90,13 +90,12 @@ export class HomeComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    // Verifica o login assim que a página carrega
     this.logado = this.authService.usuarioEstaLogado();
     console.log('Status do login na Home:', this.logado);
   }
 
   sair() {
     this.authService.logout();
-    this.logado = false; // Atualiza a tela na hora
+    this.logado = false;
   }
 }

@@ -32,7 +32,6 @@ export class LoginComponent implements OnInit {
       const { email, senha } = this.loginForm.value;
 
       try {
-        // AGORA SIM: Chamamos o servidor para validar a senha com Bcrypt
         const usuarioLogado = await this.authService.login(email, senha);
 
         if (usuarioLogado) {

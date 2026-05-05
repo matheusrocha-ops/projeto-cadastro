@@ -1,5 +1,10 @@
 {
   "dependencies": {
+    "@angular/material": "^21.2.8",
+    "bcrypt": "^6.0.0",
     "mongodb": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0"
   }
 }

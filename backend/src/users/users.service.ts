@@ -14,7 +14,6 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  // 1. CRIAR USUÁRIO
   async create(createUserDto: CreateUserDto): Promise<Omit<User, 'senha'>> {
     try {
       const salt = await bcrypt.genSalt(10);
@@ -28,13 +27,11 @@ export class UserService {
       const resultado = await createdUser.save();
       const usuarioObj = resultado.toObject();
 
-      // Removemos a senha de forma segura para o TypeScript
       const { senha, ...usuarioSemSenha } = usuarioObj as User;
-      console.log(senha); // Apenas para o linter não reclamar de variável não usada
+      console.log(senha);
 
       return usuarioSemSenha;
     } catch (error: unknown) {
-      // Tratamento de erro sem usar 'any'
       const mongoError = error as { code?: number };
       if (mongoError.code === 11000) {
         throw new ConflictException('E-mail ou CPF já cadastrado! 🚫');
@@ -43,12 +40,10 @@ export class UserService {
     }
   }
 
-  // 2. LISTAR USUÁRIOS
   async listUsers(): Promise<User[]> {
     return this.userModel.find().select('-senha').exec();
   }
 
-  // 3. VALIDAR USUÁRIO (LOGIN)
   async validarUsuario(
     email: string,
     senhaDigitada: string,
@@ -62,7 +57,6 @@ export class UserService {
     return null;
   }
 
-  // 4. ATUALIZAR
   async update(
     id: string,
     dados: Partial<CreateUserDto>,
@@ -86,7 +80,6 @@ export class UserService {
     return atualizado;
   }
 
-  // 5. REMOVER
   async remove(id: string): Promise<{ mensagem: string }> {
     const deletado = await this.userModel.findByIdAndDelete(id).exec();
     if (!deletado) throw new NotFoundException('Usuário não encontrado.');

@@ -1,20 +1,19 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // Adicionado
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService, Usuario } from './auth.service';
 
 @Component({
   selector: 'app-listagem',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule], // Adicionado ReactiveFormsModule
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './listagem.html',
   styleUrl: './listagem.css',
 })
 export class ListagemComponent implements OnInit {
   usuariosNaTela: Usuario[] = [];
 
-  // Variáveis para o Modal
   exibirModal = false;
   formEdicao!: FormGroup;
   idUsuarioSendoEditado: string | null = null;
@@ -22,9 +21,8 @@ export class ListagemComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder, // Adicionado
+    private fb: FormBuilder,
   ) {
-    // Inicializa o formulário de edição
     this.formEdicao = this.fb.group({
       nomeCompleto: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -47,14 +45,11 @@ export class ListagemComponent implements OnInit {
     }
   }
 
-  // Abre o modal e preenche os campos com os dados atuais
   abrirModal(usuario: Usuario) {
     if (!usuario._id) return;
 
     this.idUsuarioSendoEditado = usuario._id;
     this.exibirModal = true;
-
-    // Preenche o formulário com o que já existe no banco
     this.formEdicao.patchValue({
       nomeCompleto: usuario.nomeCompleto,
       email: usuario.email,
