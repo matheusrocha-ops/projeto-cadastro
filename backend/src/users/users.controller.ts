@@ -9,11 +9,13 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
-
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { GetUser, type UsuarioPayload } from './get-user.decorator';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UserService) {}
@@ -24,7 +26,8 @@ export class UsersController {
   }
 
   @Get()
-  listUsers() {
+  @UseGuards(JwtAuthGuard)
+  async listarUsuarios(@GetUser() _usuarioLogado: UsuarioPayload) {
     return this.usersService.listUsers();
   }
 
@@ -53,10 +56,6 @@ export class UsersController {
       throw new UnauthorizedException('E-mail ou senha incorretos! ❌');
     }
 
-    return {
-      id: usuario._id,
-      nome: usuario.nomeCompleto,
-      email: usuario.email,
-    };
+    return this.usersService.gerarToken(usuario);
   }
 }

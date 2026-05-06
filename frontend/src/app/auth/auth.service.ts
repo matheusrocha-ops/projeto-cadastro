@@ -11,6 +11,10 @@ export interface Usuario {
   dataNascimento: string;
 }
 
+export interface LoginResponse {
+  access_token: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,16 +23,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  async cadastrarUsuario(novoUsuario: Usuario): Promise<any> {
-    return await firstValueFrom(this.http.post(this.apiUrl, novoUsuario));
+  async cadastrarUsuario(novoUsuario: Usuario): Promise<Usuario> {
+    return await firstValueFrom(this.http.post<Usuario>(this.apiUrl, novoUsuario));
   }
 
-  async login(email: string, senha: string): Promise<any> {
+  async login(email: string, senha: string): Promise<LoginResponse> {
     const resposta = await firstValueFrom(
-      this.http.post<any>(`${this.apiUrl}/login`, { email, senha }),
+      this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, senha }),
     );
 
-    if (resposta) {
+    if (resposta?.access_token) {
+      localStorage.setItem('meuToken', resposta.access_token);
       localStorage.setItem('usuarioLogado', 'true');
     }
 
@@ -36,15 +41,16 @@ export class AuthService {
   }
 
   async obterUsuarios(): Promise<Usuario[]> {
+    console.log('AuthService.obterUsuarios token', localStorage.getItem('meuToken'));
     return await firstValueFrom(this.http.get<Usuario[]>(this.apiUrl));
   }
 
-  async deletarUsuario(id: string): Promise<any> {
-    return await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
+  async deletarUsuario(id: string): Promise<void> {
+    return await firstValueFrom(this.http.delete<void>(`${this.apiUrl}/${id}`));
   }
 
-  async atualizarUsuario(id: string, dadosAtualizados: Partial<Usuario>): Promise<any> {
-    return await firstValueFrom(this.http.patch(`${this.apiUrl}/${id}`, dadosAtualizados));
+  async atualizarUsuario(id: string, dadosAtualizados: Partial<Usuario>): Promise<Usuario> {
+    return await firstValueFrom(this.http.patch<Usuario>(`${this.apiUrl}/${id}`, dadosAtualizados));
   }
 
   usuarioEstaLogado(): boolean {
@@ -55,6 +61,7 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.removeItem('meuToken');
     localStorage.removeItem('usuarioLogado');
     window.location.href = '/';
   }
